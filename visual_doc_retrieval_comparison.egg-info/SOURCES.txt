@@ -1,0 +1,11 @@
+README.md
+setup.py
+src/__init__.py
+src/evaluate.py
+src/pypdf_retrieval_method.py
+src/retrieval_method.py
+test/test_pypdf_retrieval_method.py
+visual_doc_retrieval_comparison.egg-info/PKG-INFO
+visual_doc_retrieval_comparison.egg-info/SOURCES.txt
+visual_doc_retrieval_comparison.egg-info/dependency_links.txt
+visual_doc_retrieval_comparison.egg-info/top_level.txt
