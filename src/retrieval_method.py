@@ -17,7 +17,7 @@ class RetrievalMethod(ABC):
         pass
 
     @abstractmethod
-    def pdf2vector(self, image_base64: str) -> List:
+    def image2vector(self, image_base64: str) -> List:
         """
         Convert an query to a vector.
         image_base64: base64 encoded image

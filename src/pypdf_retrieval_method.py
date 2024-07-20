@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 import base64
 
 from openai import OpenAI
+import pypdf
 
 from src.retrieval_method import RetrievalMethod
 
@@ -35,11 +36,17 @@ class PyPdfRetrievalMethod(RetrievalMethod):
         except Exception as e:
             return {}
 
-    def pdf2vector(self, images_base64: List[str]) -> Dict[str, List]:
+    def image2vector(self, images: List[Dict[str,str]]) -> Dict[str, List]:
         """
         Convert an image to a vector.
-        images_base64: base64 encoded image
+        images_base64: Dict with keys image_name and image_base64
         """
-        
+        try:
+            for image in images:
+                r = pypdf.PdfReader(stream=image['image_base64'])
+                image['image_text'] = r.pages[0].extract_text()
+            print("A")
+        except:
+            print(f"Error reading PDF file {images[0]['image_base64']}")
 
         return [0.0, 1.0, 0.0]

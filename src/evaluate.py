@@ -30,15 +30,18 @@ def evaluate(
     # df['img_base64'] = df['img'].apply(img_bytes_to_base64)
 
     # Add query2vector column
-    query_vectors = method.query2vector(df['query'].tolist())
-    query_vectors_df = pd.DataFrame(query_vectors.items(), columns=['query', 'query_vector'])
-    df = pd.merge(df, query_vectors_df, on='query')
-    print(len(df))
-    print(df.head())
+    # query_vectors = method.query2vector(df['query'].tolist())
+    # query_vectors_df = pd.DataFrame(query_vectors.items(), columns=['query', 'query_vector'])
+    # df = pd.merge(df, query_vectors_df, on='query')
 
     # Add img column
-    # df['query2vector'] = df['query'].apply(method.query2vector)
-
+    def to_dict(x):
+        return {'image_filename': x['image_filename'], 'image_base64': img_bytes_to_base64(x['image']['bytes'])}
+    img_dicts = df.apply(to_dict, axis=1).tolist()
+    img_vectors = method.image2vector(img_dicts)
+    img_vectors_df = pd.DataFrame(img_vectors.items(), columns=['image_filename', 'image_vector'])
+    df = pd.merge(df, img_vectors_df, on='image_filename')
+    print(df.head())
 
 if __name__ == "__main__":
     app()
