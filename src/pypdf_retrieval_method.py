@@ -39,14 +39,35 @@ class PyPdfRetrievalMethod(RetrievalMethod):
     def image2vector(self, images: List[Dict[str,str]]) -> Dict[str, List]:
         """
         Convert an image to a vector.
-        images_base64: Dict with keys image_name and image_base64
+        images: List of Dict. Dict keys: image_filename and image_base64
         """
-        try:
-            for image in images:
-                r = pypdf.PdfReader(stream=image['image_base64'])
-                image['image_text'] = r.pages[0].extract_text()
-            print("A")
-        except:
-            print(f"Error reading PDF file {images[0]['image_base64']}")
 
-        return [0.0, 1.0, 0.0]
+        # Add key and value image_text to each Dict
+        for image in images:
+            try:
+                # Load the PDF file
+                r = pypdf.PdfReader(stream=image['image_base64'])
+                print(f"Lecture OK : {image['image_filename']}")
+                # Extract the text from the first page (image = 1 page)
+                image['image_text'] = r.pages[0].extract_text()
+            except:
+                raise Exception(f"Error reading PDF file {image['image_filename']}")  
+        
+        # Text embedding
+        load_dotenv()
+        client = OpenAI()
+
+        text = map(lambda x: x['image_text'], images)
+
+        # Rate-Limit = 3.000 / min
+        response = client.embeddings.create(
+            input=text,
+            model="text-embedding-3-large"
+        )
+
+        try:
+            data = response.data
+            embeddings = map(lambda x: x.embedding, data)
+            return dict(zip(text, embeddings))
+        except Exception as e:
+            return {}

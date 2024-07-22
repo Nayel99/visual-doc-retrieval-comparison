@@ -6,6 +6,7 @@ import pandas as pd
 from pypdf_retrieval_method import PyPdfRetrievalMethod
 
 from utils import img_bytes_to_base64
+import time
 
 app = typer.Typer(
     help="CLI for evaluating retrievers on the ViDoRe benchmark.",
@@ -22,7 +23,9 @@ def evaluate(
 
     method = PyPdfRetrievalMethod()
 
+    start_time = time.time()
     df = pd.read_parquet(hf_dataset_link_parquet)
+    print(f"DataFrame read in {time.time() - start_time} seconds")
 
     df = df[:3]
 
