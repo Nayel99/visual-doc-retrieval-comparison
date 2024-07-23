@@ -6,6 +6,7 @@ from openai import OpenAI
 import pypdf
 
 from src.retrieval_method import RetrievalMethod
+from src.utils import img_bytes_to_base64, jpg_to_pdf
 
 class PyPdfRetrievalMethod(RetrievalMethod):
     """
@@ -43,21 +44,31 @@ class PyPdfRetrievalMethod(RetrievalMethod):
         """
 
         # Add key and value image_text to each Dict
+        # Remove image from images if error
+        valid_images = []
         for image in images:
             try:
-                # Load the PDF file
-                r = pypdf.PdfReader(stream=image['image_base64'])
-                print(f"Lecture OK : {image['image_filename']}")
-                # Extract the text from the first page (image = 1 page)
-                image['image_text'] = r.pages[0].extract_text()
+                # Image to pdf
+                pdf_path = jpg_to_pdf(image['image_filename'])
+                if pdf_path:
+                    # Load the PDF file
+                    r = pypdf.PdfReader(pdf_path)
+
+                    # Extract the text from the first page (image = 1 page)
+                    image['image_text'] = r.pages[0].extract_text()
+
+                    # Add image to valid_images
+                    valid_images.append(image)
             except:
                 raise Exception(f"Error reading PDF file {image['image_filename']}")  
-        
+
+        print(valid_images)    
         # Text embedding
         load_dotenv()
         client = OpenAI()
+        text = list(map(lambda x: x['image_text'], valid_images))
 
-        text = map(lambda x: x['image_text'], images)
+        print(len)
 
         # Rate-Limit = 3.000 / min
         response = client.embeddings.create(
