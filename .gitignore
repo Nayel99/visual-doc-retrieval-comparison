@@ -3,3 +3,4 @@ venv
 brouillon.ipynb
 to_delete
 __pycache__/
+.ipynb_checkpoints
