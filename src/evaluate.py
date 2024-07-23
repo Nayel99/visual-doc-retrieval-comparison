@@ -85,10 +85,10 @@ def evaluate(
     else:
         raise ValueError("Invalid retrieval method")
 
-    print(f"Start getting data from {hf_dataset_link_parquet}.")
+    logging.info(f"Start getting data from {hf_dataset_link_parquet}.")
     start_time = time.time()
     df = pd.read_parquet(hf_dataset_link_parquet)
-    print(f"DataFrame read in {time.time() - start_time} seconds")
+    logging.info(f"DataFrame read in {time.time() - start_time} seconds")
 
     df = df[:nbr_rows]
 

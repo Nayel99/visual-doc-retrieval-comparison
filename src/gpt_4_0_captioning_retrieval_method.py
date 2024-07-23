@@ -111,5 +111,5 @@ class Gpt40CaptioningRetrievalMethod(RetrievalMethod):
             ]
             return output
         except Exception as e:
-            print(f"An error occurred: {e}")
+            logging.error(f"An error occurred: {e}")
             return {}

@@ -2,6 +2,7 @@ import base64
 import img2pdf
 import os
 import requests
+import logging
 
 def img_bytes_to_base64(data: dict | bytes) -> str:
     """
@@ -35,7 +36,7 @@ def jpg_to_pdf(jpg_file_path: str, pdf_file_path: str = "to_delete/"):
 
         return pdf_path
     except Exception as e:
-        print(f"An error occurred: {e}")
+        logging.error(f"An error occurred: {e}")
         return None
     
 def check_access_token(token : str) -> bool:

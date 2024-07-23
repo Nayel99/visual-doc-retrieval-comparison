@@ -50,7 +50,7 @@ class GoogleMultimodalEmbeddingRetrievalMethod(RetrievalMethod):
                     "query_vector": response.json()['predictions'][0]['textEmbedding']
                 })
             except Exception as e:
-                print(f"An error occurred: {e}")
+                logging.error(f"An error occurred: {e}")
 
         logging.info(f'query2vector: start for {len(queries)} queries')
         start_time = time.time()
@@ -97,7 +97,7 @@ class GoogleMultimodalEmbeddingRetrievalMethod(RetrievalMethod):
                     "image_vector": response.json()['predictions'][0]['imageEmbedding']
                 })
             except Exception as e:
-                print(f"An error occurred: {e}")
+                logging.error(f"An error occurred: {e}")
 
         logging.info(f'image2vector: start for {len(images)} images.')
         start_time = time.time()
