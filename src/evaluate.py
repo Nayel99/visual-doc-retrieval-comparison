@@ -111,7 +111,7 @@ def evaluate(
     img_vectors_df = pd.DataFrame(img_vectors, columns=['image_filename', 'image_vector'])
     df = pd.merge(df, img_vectors_df, on='image_filename')
     
-    logging.info(f"Mean NGCD : {calculate_mean_ndcg(df)}")
+    logging.info(f"Mean NDCG : {calculate_mean_ndcg(df)}")
     logging.info(f"Program ended in {round(time.time() - start_time,2)} seconds")
 
 if __name__ == "__main__":
