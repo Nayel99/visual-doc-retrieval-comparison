@@ -15,7 +15,7 @@ Available methods :
 Dataset available :
 https://huggingface.co/datasets/vidore/infovqa_test_subsampled
 
-The method used to compare the methods is NDCG@5. 
+The method used to compare the methods is NDCG. 
 The average is displayed for each query.
 
 # How to use
