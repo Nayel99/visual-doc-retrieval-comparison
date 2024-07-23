@@ -1,44 +1,45 @@
-from src.utils import img_bytes_to_base64, jpg_to_pdf, check_access_token
-
-from PIL import Image
-import requests
 import base64
-import os
-from dotenv import load_dotenv
+import responses
+from src.utils import img_bytes_to_base64, check_access_token
 
+def test_img_bytes_to_base64_bytes():
+    data = b"test data"
+    expected_result = base64.b64encode(data).decode('utf-8')
+    result = img_bytes_to_base64(data)
+    assert result == expected_result
 
-def test_img_bytes_to_base64():
+def test_img_bytes_to_base64_dict():
+    data = {"bytes": b"test data"}
+    expected_result = base64.b64encode(data["bytes"]).decode('utf-8')
+    result = img_bytes_to_base64(data)
+    assert result == expected_result
 
-    img = Image.new('RGB', (100, 100), color = 'red')
+@responses.activate
+def test_check_access_token_valid():
+    token = "valid_token"
+    url = f"https://www.googleapis.com/oauth2/v1/tokeninfo?access_token={token}"
 
-    img_base64 = img_bytes_to_base64(img)
+    responses.add(
+        responses.GET,
+        url,
+        json={"audience": "your_audience"},
+        status=200
+    )
 
-    assert isinstance(img_base64, str)
+    result = check_access_token(token)
+    assert result == True
 
-    print("Test img_bytes_to_base64 passed")
+@responses.activate
+def test_check_access_token_invalid():
+    token = "invalid_token"
+    url = f"https://www.googleapis.com/oauth2/v1/tokeninfo?access_token={token}"
 
-def test_jpg_to_pdf():
+    responses.add(
+        responses.GET,
+        url,
+        json={"error": "invalid_token"},
+        status=400
+    )
 
-    jpg_path = "https://blog.hubspot.com/hs-fs/hub/53/file-250043455-jpg/Blog-Related_Images/KontestappInfographic.jpg?width=645&amp;name=KontestappInfographic.jpg"
-    img_base64 = jpg_to_pdf(jpg_path)
-
-    print("Test jpg path to pdf passed")
-    response = requests.get(jpg_path)
-    jpg_data = response.content
-    img_base64 = base64.b64encode(jpg_data).decode('utf-8')
-    pdf_path = jpg_to_pdf(img_base64)
-    if os.path.exists(pdf_path):
-        print("Test jpg_to_pdf passed.")
-    else:
-        print("Test jpg_to_pdf failed.")
-
-def test_check_access_token():
-    load_dotenv()
-    token = os.getenv("GOOGLE_ACCESS_TOKEN")
-
-    assert type(check_access_token(token)) == bool
-
-if __name__ == "__main__":
-    # test_img_bytes_to_base64()
-    # test_jpg_to_pdf()
-    test_check_access_token()
+    result = check_access_token(token)
+    assert result == False

@@ -6,7 +6,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from dotenv import load_dotenv
 from openai import OpenAI
 
-from retrieval_method import RetrievalMethod
+from src.retrieval_method import RetrievalMethod
 
 from dotenv import load_dotenv
 
