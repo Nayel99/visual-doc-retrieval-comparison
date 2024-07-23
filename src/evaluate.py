@@ -9,7 +9,6 @@ import logging
 import os
 from dotenv import load_dotenv
 
-from pypdf_retrieval_method import PyPdfRetrievalMethod
 from google_multimodalembedding_retrieval_method import GoogleMultimodalEmbeddingRetrievalMethod
 from gpt_4_0_captioning_retrieval_method import Gpt40CaptioningRetrievalMethod
 
